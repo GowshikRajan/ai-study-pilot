@@ -27,7 +27,7 @@
 | -------------- | --------------- |
 | Gowshikrajan Senthilkumar | Backend/API |
 | Reham Mohsen | Frontend/UI |
-| Rabiya Ishaq | DevOps/Testing |
+| MEMBER 3 | DevOps/Testing |
 
 
 ## 3 Week Timeline
