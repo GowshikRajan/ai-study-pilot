@@ -29,3 +29,17 @@ AI Study Pilot is a simple web application designed for university students who 
 - Week 11 — Foundation: Set up GitHub repository, project board, database connection, app skeleton, and Docker container  
 - Week 12 — Core Development & CI Pipeline: Implement core features (summary, flashcards, quiz), connect database, and set up CI pipeline with tests  
 - Week 13 — CD Pipeline & Deployment: Deploy application to cloud, complete CD pipeline, test all features, and prepare presentation  
+
+
+## How to Run 
+### Create env
+Create env file from .env.example using: 
+copy .env.example .env
+### Build docker image
+docker build -t ai-study-pilot .
+
+### Run 
+docker run -d -p 8001:8000 --env-file .env ai-study-pilot
+
+### Test
+http://localhost:8001/health
