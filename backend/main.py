@@ -1,6 +1,12 @@
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
-client = MongoClient("mongodb+srv://rehamsw20n:rrss2222@cluster0.y4syk.mongodb.net/?appName=Cluster0")
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
 db = client["ai_study_pilot"]
 
 from fastapi import FastAPI
