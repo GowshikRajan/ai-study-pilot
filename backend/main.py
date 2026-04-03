@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from fastapi import FastAPI
-from services.gemini_service import GeminiService
+from .services.gemini_service import GeminiService
 
 load_dotenv()
 
@@ -26,7 +26,7 @@ def health_check():
 def test_db():
     return {"message": "Database connected successfully"}
 
-@app.get("/gemini-test")
+@app.get("/health/gemini")
 def test_gemini():
     """Hidden test endpoint to verify Gemini API connectivity."""
     return gemini_service.test_connection()
