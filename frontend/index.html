@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Study Pilot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>AI Study Pilot</h1>
+        <p>Your smart assistant for summaries, flashcards, and quizzes</p>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <textarea id="inputText" placeholder="Paste or type your study text here..."></textarea>
+        </section>
+
+        <section class="button-section">
+            <button onclick="generateSummary()">Generate Summary</button>
+            <button onclick="generateFlashcards()">Generate Flashcards</button>
+            <button onclick="generateQuiz()">Generate Quiz</button>
+        </section>
+
+        <section class="output-section">
+            <h2>Result</h2>
+            <div id="output"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 AI Study Pilot</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

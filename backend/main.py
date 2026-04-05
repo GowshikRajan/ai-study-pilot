@@ -21,7 +21,6 @@ def root():
 def health_check():
     return {"status": "ok"}
 
-
 @app.get("/test-db")
 def test_db():
     return {"message": "Database connected successfully"}
