@@ -1,8 +1,10 @@
 import os
+import uuid
+from typing import Optional
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from pydantic import BaseModel
 from pymongo import MongoClient
+from fastapi import FastAPI, Response, Cookie, Depends
+from pydantic import BaseModel
 from backend.services.gemini_service import GeminiService
 
 load_dotenv()
@@ -10,7 +12,9 @@ load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
-db = client["ai_study_pilot"]
+# Updated database name to 'project'
+db = client["project"]
+user_materials = db["user_materials"]
 
 class StudyRequest(BaseModel):
     content: str
@@ -18,9 +22,18 @@ class StudyRequest(BaseModel):
 app = FastAPI()
 gemini_service = GeminiService()
 
+def get_session_id(response: Response, session_id: Optional[str] = Cookie(None)):
+    """Dependency to get or create a session_id cookie."""
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        # Set cookie: httponly=True, max_age=30 days (in seconds)
+        response.set_cookie(key="session_id", value=session_id, httponly=True, max_age=2592000)
+    return session_id
+
 @app.get("/")
-def root():
-    return {"message": "AI Study Pilot is running"}
+def root(session_id: str = Depends(get_session_id)):
+    return {"message": "AI Study Pilot is running", "session_id": session_id}
+
 
 @app.get("/health")
 def health_check():
