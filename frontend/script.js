@@ -1,11 +1,26 @@
 function generateSummary() {
-    document.getElementById("output").innerHTML = "<p><strong>Summary:</strong> Coming soon...</p>";
+    let text = document.getElementById("inputText").value;
+    if (!text) {
+        alert("Please enter text first");
+        return;
+    }
+    alert("Summary clicked with text: " + text);
 }
 
 function generateFlashcards() {
-    document.getElementById("output").innerHTML = "<p><strong>Flashcards:</strong> Coming soon...</p>";
+    let text = document.getElementById("inputText").value;
+    if (!text) {
+        alert("Please enter text first");
+        return;
+    }
+    alert("Flashcards clicked with text: " + text);
 }
 
 function generateQuiz() {
-    document.getElementById("output").innerHTML = "<p><strong>Quiz:</strong> Coming soon...</p>";
+    let text = document.getElementById("inputText").value;
+    if (!text) {
+        alert("Please enter text first");
+        return;
+    }
+    alert("Quiz clicked with text: " + text);
 }
