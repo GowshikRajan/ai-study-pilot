@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
-from pymongo import MongoClient
 from fastapi import FastAPI
 from pydantic import BaseModel
+from pymongo import MongoClient
 from backend.services.gemini_service import GeminiService
 
 load_dotenv()
@@ -34,6 +34,11 @@ def test_db():
 def test_gemini():
     """Hidden test endpoint to verify Gemini API connectivity."""
     return gemini_service.test_connection()
+
+@app.post("/generate-quiz")
+def generate_quiz(request: StudyRequest):
+    """Endpoint to generate a multiple-choice quiz from study content."""
+    return gemini_service.generate_quiz(request.content)
 
 @app.post("/generate-summary")
 def generate_summary(request: StudyRequest):

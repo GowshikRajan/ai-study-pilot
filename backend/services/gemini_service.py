@@ -58,6 +58,33 @@ class GeminiService:
             logger.error(f"Failed to parse JSON response: {str(e)}")
             return {"error": "Invalid JSON format", "raw": raw_response}
 
+    def generate_quiz(self, study_content: str):
+        """Constructs a prompt and generates a multiple-choice quiz."""
+        prompt = f"""
+        Based on the following study content, generate a multiple-choice quiz in JSON format.
+        
+        Requirements:
+        - Provide 3-5 questions.
+        - Each question must have 4 options.
+        - Specify the correct answer using its index in the options array (0-3).
+        - Return ONLY the JSON object. Do not include any introductory or concluding text.
+        - Return the data strictly as a JSON object with a "quiz" key. 
+
+        Example JSON format:
+        {{
+            "quiz": [
+                {{
+                    "question": "What is the capital of France?",
+                    "options": ["Paris", "London", "Berlin", "Madrid"],
+                    "answer_index": 0,
+                    "explanation": "Paris has been the capital of France since 508 AD."                }}
+            ]
+        }}
+        Study Content:
+        {study_content}
+        """
+        return self.call_gemini(prompt, expect_json=True)
+        
     def generate_summary(self, study_content: str):
         """Generates a concise summary with key points in JSON format."""
         prompt = f"""
