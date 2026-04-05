@@ -12,7 +12,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["ai_study_pilot"]
 
-class QuizRequest(BaseModel):
+class StudyRequest(BaseModel):
     content: str
 
 app = FastAPI()
@@ -36,7 +36,16 @@ def test_gemini():
     return gemini_service.test_connection()
 
 @app.post("/generate-quiz")
-def generate_quiz(request: QuizRequest):
+def generate_quiz(request: StudyRequest):
     """Endpoint to generate a multiple-choice quiz from study content."""
     return gemini_service.generate_quiz(request.content)
 
+@app.post("/generate-summary")
+def generate_summary(request: StudyRequest):
+    """Endpoint to generate a summary with key points from study content."""
+    return gemini_service.generate_summary(request.content)
+
+@app.post("/generate-flashcards")
+def generate_flashcards(request: StudyRequest):
+    """Endpoint to generate Q&A flashcards from study content."""
+    return gemini_service.generate_flashcards(request.content)

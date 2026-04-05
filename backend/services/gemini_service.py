@@ -80,7 +80,58 @@ class GeminiService:
                     "explanation": "Paris has been the capital of France since 508 AD."                }}
             ]
         }}
+        Study Content:
+        {study_content}
+        """
+        return self.call_gemini(prompt, expect_json=True)
         
+    def generate_summary(self, study_content: str):
+        """Generates a concise summary with key points in JSON format."""
+        prompt = f"""
+        Based on the following study content, provide a clear and concise summary.
+        
+        Requirements:
+        - Provide a brief 'overview' paragraph.
+        - Provide a list of 'key_points' (at least 3-5).
+        - Return ONLY the JSON object.
+        - Return the data strictly as a JSON object with 'overview' and 'key_points' keys.
+
+        Example JSON format:
+        {{
+            "overview": "A brief summary of the main topic.",
+            "key_points": [
+                "Important fact one.",
+                "Crucial concept two.",
+                "Significant detail three."
+            ]
+        }}
+
+        Study Content:
+        {study_content}
+        """
+        return self.call_gemini(prompt, expect_json=True)
+
+    def generate_flashcards(self, study_content: str):
+        """Generates question and answer flashcard pairs in JSON format."""
+        prompt = f"""
+        Based on the following study content, generate 5-8 flashcards.
+        
+        Requirements:
+        - Each flashcard must have a 'question' and an 'answer'.
+        - Ensure questions are challenging but clear; ensure the cover core concepts.
+        - Return ONLY the JSON object.
+        - Return the data strictly as a JSON object with a 'flashcards' key.
+
+        Example JSON format:
+        {{
+            "flashcards": [
+                {{
+                    "question": "What is the primary function of mitochondria?",
+                    "answer": "To produce energy (ATP) for the cell through cellular respiration."
+                }}
+            ]
+        }}
+
         Study Content:
         {study_content}
         """
