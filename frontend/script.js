@@ -33,6 +33,38 @@ function showTextResult(message) {
     output.appendChild(textBlock);
 }
 
+function showSummaryResult(data) {
+    output.innerHTML = "";
+    const summaryCard = createElement("div", "summary-card");
+
+    const title = createElement("h3", "summary-title", "Summary");
+    summaryCard.appendChild(title);
+
+    if (data.overview) {
+        const overview = createElement("div", "summary-overview", data.overview);
+        summaryCard.appendChild(overview);
+    }
+
+    if (Array.isArray(data.key_points) && data.key_points.length > 0) {
+        const pointsLabel = createElement("div", "summary-subtitle", "Key points:");
+        summaryCard.appendChild(pointsLabel);
+
+        const list = createElement("ul", "summary-list");
+        data.key_points.forEach((point) => {
+            const item = createElement("li", undefined, point);
+            list.appendChild(item);
+        });
+        summaryCard.appendChild(list);
+    }
+
+    if (!data.overview && !Array.isArray(data.key_points)) {
+        const fallback = createElement("div", "text-result", JSON.stringify(data, null, 2));
+        summaryCard.appendChild(fallback);
+    }
+
+    output.appendChild(summaryCard);
+}
+
 function showJsonResult(data) {
     output.innerHTML = "";
     const pre = document.createElement("pre");
@@ -258,8 +290,13 @@ async function generateSummary() {
         return;
     }
 
-    if (typeof data === "string" || data.result) {
-        showTextResult(data.result || data);
+    if (typeof data === "string") {
+        showTextResult(data);
+        return;
+    }
+
+    if (data.overview || Array.isArray(data.key_points)) {
+        showSummaryResult(data);
         return;
     }
 
