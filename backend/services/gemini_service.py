@@ -4,11 +4,14 @@ import logging
 import requests
 from dotenv import load_dotenv
 
+
 load_dotenv()
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class GeminiService:
     def __init__(self):
@@ -17,7 +20,6 @@ class GeminiService:
         if not self.api_key:
             logger.error("GEMINI_API_KEY not found in environment variables.")
             raise ValueError("GEMINI_API_KEY is missing")
-        
         # REST API Configuration
         self.model = "gemini-3-flash-preview"
         # Based on user script: https://aiplatform.googleapis.com/v1/publishers/google/models/{MODEL}:generateContent
@@ -33,7 +35,6 @@ class GeminiService:
             }
             response = requests.post(self.url, json=payload, headers={"Content-Type": "application/json"})
             response.raise_for_status()
-            
             result = response.json()
             message = result["candidates"][0]["content"]["parts"][0]["text"].strip()
             return {"status": "success", "message": message}
@@ -52,7 +53,6 @@ class GeminiService:
                 cleaned = cleaned[7:]
             if cleaned.endswith("```"):
                 cleaned = cleaned[:-3]
-            
             return json.loads(cleaned.strip())
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse JSON response: {str(e)}")
@@ -62,13 +62,13 @@ class GeminiService:
         """Constructs a prompt and generates a multiple-choice quiz."""
         prompt = f"""
         Based on the following study content, generate a multiple-choice quiz in JSON format.
-        
+
         Requirements:
         - Provide 3-5 questions.
         - Each question must have 4 options.
         - Specify the correct answer using its index in the options array (0-3).
         - Return ONLY the JSON object. Do not include any introductory or concluding text.
-        - Return the data strictly as a JSON object with a "quiz" key. 
+        - Return the data strictly as a JSON object with a "quiz" key.
 
         Example JSON format:
         {{
@@ -84,12 +84,12 @@ class GeminiService:
         {study_content}
         """
         return self.call_gemini(prompt, expect_json=True)
-        
+
     def generate_summary(self, study_content: str):
         """Generates a concise summary with key points in JSON format."""
         prompt = f"""
         Based on the following study content, provide a clear and concise summary.
-        
+
         Requirements:
         - Provide a brief 'overview' paragraph.
         - Provide a list of 'key_points' (at least 3-5).
@@ -105,7 +105,6 @@ class GeminiService:
                 "Significant detail three."
             ]
         }}
-
         Study Content:
         {study_content}
         """
@@ -115,7 +114,7 @@ class GeminiService:
         """Generates question and answer flashcard pairs in JSON format."""
         prompt = f"""
         Based on the following study content, generate 5-8 flashcards.
-        
+
         Requirements:
         - Each flashcard must have a 'question' and an 'answer'.
         - Ensure questions are challenging but clear; ensure the cover core concepts.
@@ -146,20 +145,15 @@ class GeminiService:
                 "contents": [{"parts": [{"text": prompt}]}]
             }
             response = requests.post(self.url, json=payload, headers={"Content-Type": "application/json"})
-            
             if response.status_code == 429:
                 logger.warning("Quota exceeded (429)")
                 return {"error": "API quota exceeded. Try again later."}
-            
             response.raise_for_status()
-            
             result = response.json()
             text_response = result["candidates"][0]["content"]["parts"][0]["text"]
-            
             if expect_json:
                 return self.clean_json_response(text_response)
             return text_response
-            
         except requests.exceptions.HTTPError as e:
             logger.error(f"HTTP Error: {str(e)}")
             return {"error": f"API returned error: {response.status_code}"}
