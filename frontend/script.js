@@ -101,6 +101,109 @@ function showJsonResult(data) {
     output.appendChild(pre);
 }
 
+function showHistory() {
+    showLoading("Loading past study materials...");
+
+    fetch("http://127.0.0.1:8001/history", { credentials: "include" })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                showError(data.error);
+                return;
+            }
+
+            if (!Array.isArray(data.history) || data.history.length === 0) {
+                showTextResult("No past study materials were found for this session.");
+                return;
+            }
+
+            renderHistory(data.history);
+        })
+        .catch((error) => {
+            showError("Failed to load history. Please try again.");
+            console.error(error);
+        });
+}
+
+function renderHistory(items) {
+    output.innerHTML = "";
+    const historyContainer = createElement("div", "history-list");
+
+    items.forEach((item) => {
+        historyContainer.appendChild(renderHistoryItem(item));
+    });
+
+    output.appendChild(historyContainer);
+}
+
+function renderHistoryItem(item) {
+    const card = createElement("div", "history-card");
+
+    const header = createElement("div", "history-card-header");
+    header.appendChild(createElement("div", "history-type", item.type || "Unknown"));
+    header.appendChild(
+        createElement(
+            "div",
+            "history-date",
+            item.created_at ? new Date(item.created_at).toLocaleString() : "Unknown date"
+        )
+    );
+    card.appendChild(header);
+
+    const data = item.data || {};
+
+    if (item.type === "summary") {
+        card.appendChild(createElement("div", "history-item-title", "Summary"));
+        if (data.overview) {
+            card.appendChild(createElement("div", "history-overview", data.overview));
+        }
+        if (Array.isArray(data.key_points) && data.key_points.length > 0) {
+            const list = createElement("ul", "history-list-items");
+            data.key_points.forEach((point) => {
+                list.appendChild(createElement("li", undefined, point));
+            });
+            card.appendChild(list);
+        }
+    } else if (item.type === "flashcards") {
+        card.appendChild(createElement("div", "history-item-title", "Flashcards"));
+        if (Array.isArray(data.flashcards) && data.flashcards.length > 0) {
+            data.flashcards.forEach((flashcard, idx) => {
+                const flashNode = createElement("div", "history-flashcard");
+                flashNode.appendChild(createElement("div", "flashcard-number", `#${idx + 1}`));
+                flashNode.appendChild(createElement("div", "flashcard-question", flashcard.question || "No question provided."));
+                flashNode.appendChild(createElement("div", "flashcard-answer", flashcard.answer || "No answer provided."));
+                card.appendChild(flashNode);
+            });
+        }
+    } else if (item.type === "quiz") {
+        card.appendChild(createElement("div", "history-item-title", "Quiz"));
+        if (Array.isArray(data.quiz) && data.quiz.length > 0) {
+            data.quiz.forEach((quizItem, idx) => {
+                const quizNode = createElement("div", "history-quiz-item");
+                quizNode.appendChild(createElement("div", "history-quiz-question", `${idx + 1}. ${quizItem.question || "No question provided."}`));
+                if (Array.isArray(quizItem.options)) {
+                    const optionList = createElement("ul", "history-list-items");
+                    quizItem.options.forEach((option) => {
+                        optionList.appendChild(createElement("li", undefined, option));
+                    });
+                    quizNode.appendChild(optionList);
+                }
+                if (quizItem.answer_index !== undefined) {
+                    const correct = quizItem.options && quizItem.options[quizItem.answer_index]
+                        ? quizItem.options[quizItem.answer_index]
+                        : "Unknown";
+                    quizNode.appendChild(createElement("div", "history-quiz-answer", `Answer: ${correct}`));
+                }
+                card.appendChild(quizNode);
+            });
+        }
+    } else {
+        card.appendChild(createElement("pre", "history-raw", JSON.stringify(data, null, 2)));
+    }
+
+    return card;
+}
+
 function resetQuizState() {
     quizState.currentQuestionIndex = 0;
     quizState.selectedOptionIndex = null;
@@ -306,6 +409,7 @@ async function generateSummary() {
     showLoading("Generating summary...");
 
     let response = await fetch("http://127.0.0.1:8001/generate-summary", {
+        credentials: "include",
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -343,6 +447,7 @@ async function generateFlashcards() {
     showLoading("Generating flashcards...");
 
     let response = await fetch("http://127.0.0.1:8001/generate-flashcards", {
+        credentials: "include",
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -377,6 +482,7 @@ async function generateQuiz() {
     showLoading("Creating an interactive quiz...");
 
     let response = await fetch("http://127.0.0.1:8001/generate-quiz", {
+        credentials: "include",
         method: "POST",
         headers: {
             "Content-Type": "application/json",
