@@ -1,13 +1,20 @@
 # AI Study Pilot
+[![CI/CD Pipeline](https://github.com/GowshikRajan/ai-study-pilot/actions/workflows/cicd.yml/badge.svg)](https://github.com/GowshikRajan/ai-study-pilot/actions/workflows/cicd.yml)
+
+🌐 **Live App:** https://ai-study-pilot-latest.onrender.com/  
+🐳 **Docker Hub:** https://hub.docker.com/r/asmabenghezal/ai-study-pilot
+
 
 ## Description
 AI Study Pilot is a simple web application designed for university students who want to study faster and more efficiently. It allows users to paste lecture notes or textbook content and quickly turn them into useful study materials such as summaries, flashcards, and quizzes. The goal is to help students save time and improve understanding before exams.
 
+
 ## Features
-- Study Dashboard: A simple interface where users can enter their study content and choose a tool  
-- Text-to-Summary (AI-powered using Gemini): Converts long text into short, clear key points  
-- Flashcard Generator (AI-powered using Gemini): Creates question and answer flashcards  
-- Knowledge Check Quiz (AI-powered using Gemini): Generates a multiple-choice quiz  
+- **Study Dashboard** A simple interface where users can enter their study content and choose a tool  
+- **Text-to-Summary** — (AI-powered using Gemini): Converts long text into short, clear key points  
+- **Flashcard Generator** — (AI-powered using Gemini): Creates question and answer flashcards  
+- **Knowledge Check Quiz** — (AI-powered using Gemini): Generates a multiple-choice quiz  
+- **History** — tracks all generated materials per session (MongoDB)
 
 ## Tech Stack
 | Layer | Chosen | Justification |
@@ -35,6 +42,7 @@ AI Study Pilot is a simple web application designed for university students who 
 ### Create env
 Create env file from .env.example using: 
 copy .env.example .env
+
 ### Build docker image
 docker build -t ai-study-pilot .
 

@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # -----------------------------------------------------------------------
+  # Job 1: Build → Lint → Test → Smoke test → Push to Docker Hub
+  # -----------------------------------------------------------------------
+  build-test-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run linter (flake8)
+        run: |
+          flake8 backend/ tests/ --max-line-length=120
+
+      - name: Run unit tests
+        env:
+          GEMINI_API_KEY: "dummy-key-for-ci"
+          MONGO_URI: "mongodb://localhost:27017/testdb"
+        run: |
+          pytest tests/ -v --tb=short
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image (load to local Docker daemon for smoke test)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:${{ github.sha }}
+
+      - name: Smoke test — start container and verify /health
+        run: |
+          docker run -d -p 8000:8000 \
+            -e GEMINI_API_KEY="dummy-key-for-smoke" \
+            -e MONGO_URI="mongodb://localhost:27017/testdb" \
+            --name smoke-test \
+            ${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:latest
+          echo "Waiting 8 seconds for container to start..."
+          sleep 8
+          curl --fail http://localhost:8000/health || \
+            (echo "Smoke test failed. Container logs:" && docker logs smoke-test && exit 1)
+          echo "Smoke test passed!"
+          docker stop smoke-test && docker rm smoke-test
+
+      - name: Push image to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:${{ github.sha }}
+
+  # -----------------------------------------------------------------------
+  # Job 2: Deploy to Render
+  # Only runs on push to main, after build-test-push succeeds
+  # -----------------------------------------------------------------------
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-test-push
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Trigger Render deploy hook
+        run: |
+          curl --fail -X POST "${{ secrets.RENDER_DEPLOY_URL }}"
+          echo "Deploy hook triggered successfully."
