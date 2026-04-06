@@ -28,9 +28,12 @@ jobs:
         run: |
           flake8 backend/ tests/ --max-line-length=120
 
-      - name: Run tests
+      - name: Run unit tests
+        env:
+          GEMINI_API_KEY: "dummy-key-for-ci"
+          MONGO_URI: "mongodb://localhost:27017/testdb"
         run: |
-          echo "No tests yet — will be replaced in next issue"
+          pytest tests/ -v --tb=short
 
       - name: Build Docker image
         run: |
