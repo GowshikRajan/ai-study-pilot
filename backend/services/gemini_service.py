@@ -4,11 +4,14 @@ import logging
 import requests
 from dotenv import load_dotenv
 
+
 load_dotenv()
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class GeminiService:
     def __init__(self):
@@ -22,6 +25,7 @@ class GeminiService:
         self.model = "gemini-3-flash-preview"
         # Based on user script: https://aiplatform.googleapis.com/v1/publishers/google/models/{MODEL}:generateContent
         self.url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
+
 
     def test_connection(self) -> dict:
         """
@@ -41,6 +45,7 @@ class GeminiService:
             logger.error(f"Ping failed: {str(e)}")
             return {"status": "error", "message": str(e)}
 
+
     def clean_json_response(self, raw_response: str) -> dict:
         """
         Helper to ensure Gemini returns clean JSON.
@@ -57,6 +62,7 @@ class GeminiService:
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse JSON response: {str(e)}")
             return {"error": "Invalid JSON format", "raw": raw_response}
+
 
     def generate_quiz(self, study_content: str):
         """Constructs a prompt and generates a multiple-choice quiz."""
@@ -84,7 +90,8 @@ class GeminiService:
         {study_content}
         """
         return self.call_gemini(prompt, expect_json=True)
-        
+
+
     def generate_summary(self, study_content: str):
         """Generates a concise summary with key points in JSON format."""
         prompt = f"""
@@ -111,6 +118,7 @@ class GeminiService:
         """
         return self.call_gemini(prompt, expect_json=True)
 
+
     def generate_flashcards(self, study_content: str):
         """Generates question and answer flashcard pairs in JSON format."""
         prompt = f"""
@@ -136,6 +144,7 @@ class GeminiService:
         {study_content}
         """
         return self.call_gemini(prompt, expect_json=True)
+
 
     def call_gemini(self, prompt: str, expect_json: bool = False):
         """

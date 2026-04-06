@@ -3,7 +3,9 @@ from datetime import datetime
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+
 load_dotenv()
+
 
 class DatabaseService:
     def __init__(self):
@@ -12,6 +14,7 @@ class DatabaseService:
         # Database name is 'project' as requested
         self.db = self.client["project"]
         self.collection = self.db["user_materials"]
+
 
     def save_material(self, session_id: str, material_type: str, data: dict):
         """Saves generated study material to the database."""
@@ -26,6 +29,7 @@ class DatabaseService:
             result = self.collection.insert_one(entry)
             return str(result.inserted_id)
         return None
+
 
     def get_user_history(self, session_id: str):
         """Retrieves all materials associated with a session ID."""
