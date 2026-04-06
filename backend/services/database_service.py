@@ -3,6 +3,7 @@ from datetime import datetime
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 
@@ -38,5 +39,4 @@ class DatabaseService:
             doc["_id"] = str(doc["_id"])
             doc["created_at"] = doc["created_at"].isoformat()
             history.append(doc)
-
         return history
