@@ -13,6 +13,7 @@ os.environ.setdefault("MONGO_URI", "mongodb://localhost:27017/testdb")
 # Shared mock data — used by fixtures below
 # ---------------------------------------------------------------------------
 
+
 MOCK_QUIZ_RESPONSE = {
     "quiz": [
         {
@@ -24,6 +25,7 @@ MOCK_QUIZ_RESPONSE = {
     ]
 }
 
+
 MOCK_SUMMARY_RESPONSE = {
     "overview": "This is a test overview of the provided study material.",
     "key_points": [
@@ -33,6 +35,7 @@ MOCK_SUMMARY_RESPONSE = {
     ],
 }
 
+
 MOCK_FLASHCARD_RESPONSE = {
     "flashcards": [
         {
@@ -41,6 +44,7 @@ MOCK_FLASHCARD_RESPONSE = {
         }
     ]
 }
+
 
 MOCK_HISTORY = [
     {
