@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class DatabaseService:
     def __init__(self):
         self.mongo_uri = os.getenv("MONGO_URI")
@@ -31,12 +32,11 @@ class DatabaseService:
         """Retrieves all materials associated with a session ID."""
         # Find all entries for the session, sorted by newest first
         cursor = self.collection.find({"session_id": session_id}).sort("created_at", -1)
-        
         history = []
         for doc in cursor:
             # Convert ObjectId and datetime to strings for JSON serialization
             doc["_id"] = str(doc["_id"])
             doc["created_at"] = doc["created_at"].isoformat()
             history.append(doc)
-            
+
         return history

@@ -5,6 +5,7 @@
 # Quiz generation tests
 # ---------------------------------------------------------------------------
 
+
 def test_generate_quiz_returns_200(client):
     """POST /generate-quiz should return HTTP 200."""
     response = client.post("/generate-quiz", json={"content": "Study text about Python."})
@@ -16,6 +17,7 @@ def test_generate_quiz_response_has_quiz_key(client):
     response = client.post("/generate-quiz", json={"content": "Study text about Python."})
     data = response.json()
     assert "quiz" in data
+
 
 def test_generate_quiz_contains_at_least_one_question(client):
     """POST /generate-quiz should return a non-empty list of questions."""

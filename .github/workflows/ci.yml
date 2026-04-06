@@ -38,3 +38,19 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ai-study-pilot:test .
+
+      - name: Smoke test — start container and verify /health
+        run: |
+          docker run -d -p 8000:8000 \
+            -e GEMINI_API_KEY="dummy-key-for-smoke" \
+            -e MONGO_URI="mongodb://localhost:27017/testdb" \
+            --name smoke-test \
+            ai-study-pilot:test
+          echo "Waiting 8 seconds for the container to start..."
+          sleep 8
+          echo "Calling /health endpoint..."
+          curl --fail http://localhost:8000/health || \
+            (echo "Health check failed. Container logs:" && docker logs smoke-test && exit 1)
+          echo "Health check passed!"
+          docker stop smoke-test
+          docker rm smoke-test
