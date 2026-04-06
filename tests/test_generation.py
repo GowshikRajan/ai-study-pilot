@@ -60,3 +60,37 @@ def test_generate_summary_response_has_key_points(client):
     assert "key_points" in data
     assert isinstance(data["key_points"], list)
     assert len(data["key_points"]) >= 3
+
+
+# ---------------------------------------------------------------------------
+# Flashcard generation tests
+# ---------------------------------------------------------------------------
+
+
+def test_generate_flashcards_returns_200(client):
+    """POST /generate-flashcards should return HTTP 200."""
+    response = client.post("/generate-flashcards", json={"content": "Study text about Docker."})
+    assert response.status_code == 200
+
+
+def test_generate_flashcards_response_has_flashcards_key(client):
+    """POST /generate-flashcards response must contain a 'flashcards' key."""
+    response = client.post("/generate-flashcards", json={"content": "Study text about Docker."})
+    data = response.json()
+    assert "flashcards" in data
+
+
+def test_generate_flashcards_contains_at_least_one_card(client):
+    """POST /generate-flashcards should return a non-empty list of cards."""
+    response = client.post("/generate-flashcards", json={"content": "Study text about Docker."})
+    data = response.json()
+    assert isinstance(data["flashcards"], list)
+    assert len(data["flashcards"]) > 0
+
+
+def test_generate_flashcards_card_has_question_and_answer(client):
+    """Each flashcard must have both a 'question' and an 'answer'."""
+    response = client.post("/generate-flashcards", json={"content": "Study text about Docker."})
+    card = response.json()["flashcards"][0]
+    assert "question" in card
+    assert "answer" in card
