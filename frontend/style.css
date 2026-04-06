@@ -258,6 +258,43 @@ pre {
     box-shadow: 0 10px 30px rgba(31, 59, 103, 0.08);
 }
 
+.flashcard-container {
+    display: grid;
+    gap: 16px;
+}
+
+.flashcard-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 22px;
+    background: #ffffff;
+    box-shadow: 0 8px 22px rgba(16, 50, 90, 0.06);
+}
+
+.flashcard-number {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #5b6b89;
+    margin-bottom: 10px;
+}
+
+.flashcard-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #12203a;
+}
+
+.flashcard-answer {
+    font-size: 1rem;
+    color: #253858;
+    line-height: 1.7;
+    background: #f8fbff;
+    border: 1px solid #d7e3ff;
+    border-radius: 14px;
+    padding: 14px;
+}
+
 .summary-title {
     margin: 0 0 14px;
     font-size: 1.75rem;

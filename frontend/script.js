@@ -65,6 +65,35 @@ function showSummaryResult(data) {
     output.appendChild(summaryCard);
 }
 
+function showFlashcardsResult(data) {
+    output.innerHTML = "";
+    const flashcardContainer = createElement("div", "flashcard-container");
+
+    const title = createElement("h3", "summary-title", "Flashcards");
+    flashcardContainer.appendChild(title);
+
+    if (!Array.isArray(data.flashcards) || data.flashcards.length === 0) {
+        const fallback = createElement("div", "text-result", "No flashcards were generated.\n" + JSON.stringify(data, null, 2));
+        flashcardContainer.appendChild(fallback);
+        output.appendChild(flashcardContainer);
+        return;
+    }
+
+    data.flashcards.forEach((flashcard, index) => {
+        const card = createElement("div", "flashcard-card");
+        const cardLabel = createElement("div", "flashcard-number", `Flashcard ${index + 1}`);
+        const question = createElement("div", "flashcard-question", flashcard.question || "No question provided.");
+        const answer = createElement("div", "flashcard-answer", flashcard.answer || "No answer provided.");
+
+        card.appendChild(cardLabel);
+        card.appendChild(question);
+        card.appendChild(answer);
+        flashcardContainer.appendChild(card);
+    });
+
+    output.appendChild(flashcardContainer);
+}
+
 function showJsonResult(data) {
     output.innerHTML = "";
     const pre = document.createElement("pre");
@@ -324,6 +353,11 @@ async function generateFlashcards() {
     let data = await response.json();
     if (data.error) {
         showError(data.error);
+        return;
+    }
+
+    if (Array.isArray(data.flashcards)) {
+        showFlashcardsResult(data);
         return;
     }
 
