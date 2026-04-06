@@ -13,10 +13,12 @@ def test_root_returns_html(client):
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
 
+
 def test_root_contains_app_name(client):
     """Frontend should contain app title."""
     response = client.get("/")
     assert "AI Study Pilot" in response.text
+
 
 def test_health_returns_200(client):
     """GET /health should return HTTP 200."""
