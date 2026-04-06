@@ -1,3 +1,6 @@
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 import uuid
 from typing import Optional
 from dotenv import load_dotenv
@@ -37,9 +40,13 @@ def get_session_id(response: Response, session_id: Optional[str] = Cookie(None))
     return session_id
 
 
+# Mount frontend folder
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+
 @app.get("/")
-def root(session_id: str = Depends(get_session_id)):
-    return {"message": "AI Study Pilot is running", "session_id": session_id}
+def serve_frontend():
+    return FileResponse(os.path.join("frontend", "index.html"))
 
 
 @app.get("/health")
