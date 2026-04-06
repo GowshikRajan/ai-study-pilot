@@ -32,3 +32,31 @@ def test_generate_quiz_question_has_required_fields(client):
     assert "question" in question
     assert "options" in question
     assert "answer_index" in question
+
+
+# ---------------------------------------------------------------------------
+# Summary generation tests
+# ---------------------------------------------------------------------------
+
+
+def test_generate_summary_returns_200(client):
+    """POST /generate-summary should return HTTP 200."""
+    response = client.post("/generate-summary", json={"content": "Study text about FastAPI."})
+    assert response.status_code == 200
+
+
+def test_generate_summary_response_has_overview(client):
+    """POST /generate-summary response must contain an 'overview' key."""
+    response = client.post("/generate-summary", json={"content": "Study text about FastAPI."})
+    data = response.json()
+    assert "overview" in data
+    assert isinstance(data["overview"], str)
+
+
+def test_generate_summary_response_has_key_points(client):
+    """POST /generate-summary response must contain a non-empty 'key_points' list."""
+    response = client.post("/generate-summary", json={"content": "Study text about FastAPI."})
+    data = response.json()
+    assert "key_points" in data
+    assert isinstance(data["key_points"], list)
+    assert len(data["key_points"]) >= 3
