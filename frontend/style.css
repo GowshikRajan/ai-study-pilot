@@ -1,82 +1,284 @@
-/* General page setup */
-html, body {
-    height: 100%;
+/* General layout */
+html,
+body {
+    min-height: 100%;
     margin: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: #f4f6f9;
-    color: #333;
+    background: linear-gradient(180deg, #eef5fc 0%, #f7fafc 100%);
+    color: #1f2937;
     display: flex;
     flex-direction: column;
 }
 
-/* Header */
+body {
+    overflow-x: hidden;
+}
+
 header {
-    background: #4a90e2;
+    background: linear-gradient(135deg, #3466d9 0%, #4a90e2 100%);
     color: white;
-    padding: 20px;
+    padding: 32px 20px;
     text-align: center;
+    box-shadow: 0 10px 30px rgba(56, 90, 148, 0.16);
 }
 
-h1 {
+.brand h1 {
     margin: 0;
-    font-size: 2.5rem;   /* Bigger title */
+    font-size: 2.8rem;
+    letter-spacing: -0.04em;
 }
 
-header p {
-    font-size: 1.2rem;   /* Larger subtitle */
+.brand p {
+    margin: 12px auto 0;
+    font-size: 1.15rem;
+    max-width: 720px;
+    line-height: 1.6;
 }
 
-/* Main content */
 main {
-    flex: 1; /* Pushes footer down */
-    text-align: center;
-    padding: 20px;
+    flex: 1;
+    width: 100%;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 32px 20px 40px;
+    box-sizing: border-box;
+}
+
+.input-section {
+    margin-bottom: 24px;
 }
 
 textarea {
-    width: 70%;
-    height: 180px;       /* Bigger input box */
-    margin: 20px auto;
-    display: block;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.1rem;   /* Larger text */
+    width: 100%;
+    min-height: 180px;
+    padding: 18px;
+    border: 1px solid #c5d2e1;
+    border-radius: 18px;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    box-shadow: inset 0 1px 4px rgba(16, 35, 64, 0.06);
 }
 
-button {
-    background: #4a90e2;
+.button-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+button,
+.quiz-option,
+.quiz-action-button {
+    background: #3369d6;
     color: white;
     border: none;
-    padding: 14px 24px;  /* Bigger buttons */
-    margin: 10px;
-    border-radius: 6px;
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 1.1rem;   /* Larger text */
-    transition: background 0.3s ease;
+    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-button:hover {
-    background: #357ab8;
+button:hover,
+.quiz-option:hover,
+.quiz-action-button:hover {
+    background: #1e56c5;
+    transform: translateY(-1px);
 }
 
-/* Output box */
+button:disabled,
+.quiz-action-button:disabled {
+    background: #8fa9d8;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .output-section {
-    width: 70%;
-    margin: 20px auto;
+    width: 100%;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 20px;
-    text-align: left;
-    min-height: 120px;
-    font-size: 1.1rem;  
+    border: 1px solid #dbe2eb;
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 14px 40px rgba(31, 59, 103, 0.08);
 }
 
-/* Footer always at bottom */
+.output-section h2 {
+    margin-top: 0;
+    font-size: 1.7rem;
+    color: #102a4a;
+}
+
+.quiz-header {
+    margin-bottom: 20px;
+    display: grid;
+    gap: 10px;
+}
+
+.quiz-summary {
+    font-size: 1.05rem;
+    color: #0f2f63;
+}
+
+.quiz-tip {
+    font-size: 0.96rem;
+    color: #4b566d;
+}
+
+.quiz-card,
+.quiz-summary-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(16, 50, 90, 0.06);
+}
+
+.quiz-number {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #5b6b89;
+    margin-bottom: 14px;
+}
+
+.quiz-question {
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 22px;
+    color: #12203a;
+}
+
+.quiz-options {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.quiz-option {
+    display: block;
+    text-align: left;
+    padding: 16px 18px;
+    border: 1px solid #d1d9e6;
+    border-radius: 16px;
+    color: #172d4d;
+    font-size: 1rem;
+    background: #fafbff;
+}
+
+.quiz-option.selected {
+    border-color: #2f6edb;
+    background: #e7f0ff;
+}
+
+.quiz-option.correct {
+    border-color: #2d8f2f;
+    background: #e8f5eb;
+    color: #1c4220;
+}
+
+.quiz-option.incorrect {
+    border-color: #d63a3a;
+    background: #fde8e8;
+    color: #7f2121;
+}
+
+.quiz-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.quiz-action-button {
+    min-width: 160px;
+}
+
+.quiz-feedback,
+.loading,
+.error-message {
+    margin-top: 16px;
+    padding: 18px;
+    border-radius: 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.quiz-feedback {
+    background: #eef4ff;
+    border: 1px solid #d7e3ff;
+    color: #1f3d7e;
+}
+
+.loading {
+    background: #eef7ff;
+    border: 1px solid #c9dcff;
+    color: #22509e;
+}
+
+.error-message {
+    background: #fff0f0;
+    border: 1px solid #f2c2c2;
+    color: #8b1f1f;
+}
+
+pre {
+    background: #f7f9fc;
+    border: 1px solid #d8e1ed;
+    border-radius: 16px;
+    padding: 20px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.text-result {
+    font-size: 1rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.quiz-result-title {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    color: #102a4a;
+}
+
+.quiz-result-score {
+    font-size: 1.15rem;
+    margin-bottom: 14px;
+    color: #162f56;
+}
+
+.quiz-result-note {
+    color: #4f5e7a;
+    margin-bottom: 20px;
+}
+
 footer {
-    background: #eee;
-    padding: 15px;
-    font-size: 1rem;    
+    background: #f1f5f8;
+    padding: 18px 20px;
+    font-size: 0.95rem;
     text-align: center;
+    color: #5a6b80;
+}
+
+@media (max-width: 760px) {
+    header {
+        padding: 26px 18px;
+    }
+
+    .brand h1 {
+        font-size: 2.2rem;
+    }
+
+    .output-section,
+    textarea {
+        padding: 20px;
+    }
+
+    .quiz-card,
+    .quiz-summary-card {
+        padding: 22px;
+    }
 }
