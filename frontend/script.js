@@ -104,7 +104,7 @@ function showJsonResult(data) {
 function showHistory() {
     showLoading("Loading past study materials...");
 
-    fetch("http://127.0.0.1:8001/history", { credentials: "include" })
+    fetch("/history", { credentials: "include" })
         .then((response) => response.json())
         .then((data) => {
             if (data.error) {
@@ -408,7 +408,7 @@ async function generateSummary() {
 
     showLoading("Generating summary...");
 
-    let response = await fetch("http://127.0.0.1:8001/generate-summary", {
+    let response = await fetch("/generate-summary", {
         credentials: "include",
         method: "POST",
         headers: {
@@ -446,7 +446,7 @@ async function generateFlashcards() {
 
     showLoading("Generating flashcards...");
 
-    let response = await fetch("http://127.0.0.1:8001/generate-flashcards", {
+    let response = await fetch("/generate-flashcards", {
         credentials: "include",
         method: "POST",
         headers: {
@@ -481,7 +481,7 @@ async function generateQuiz() {
     resetQuizState();
     showLoading("Creating an interactive quiz...");
 
-    let response = await fetch("http://127.0.0.1:8001/generate-quiz", {
+    let response = await fetch("/generate-quiz", {
         credentials: "include",
         method: "POST",
         headers: {
