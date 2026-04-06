@@ -7,22 +7,16 @@ def test_root_returns_200(client):
     assert response.status_code == 200
 
 
-def test_root_message_is_correct(client):
-    """GET / response body should contain the expected message."""
+def test_root_returns_html(client):
+    """GET / should return HTML content."""
     response = client.get("/")
-    data = response.json()
-    assert "message" in data
-    assert data["message"] == "AI Study Pilot is running"
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
 
-
-def test_root_includes_session_id(client):
-    """GET / should return a session_id in the response body."""
+def test_root_contains_app_name(client):
+    """Frontend should contain app title."""
     response = client.get("/")
-    data = response.json()
-    assert "session_id" in data
-    assert isinstance(data["session_id"], str)
-    assert len(data["session_id"]) > 0
-
+    assert "AI Study Pilot" in response.text
 
 def test_health_returns_200(client):
     """GET /health should return HTTP 200."""
