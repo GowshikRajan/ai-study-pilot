@@ -6,6 +6,7 @@ from fastapi import FastAPI, Response, Cookie, Depends
 from pydantic import BaseModel
 from backend.services.gemini_service import GeminiService
 from backend.services.database_service import DatabaseService
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
@@ -15,6 +16,14 @@ class StudyRequest(BaseModel):
 app = FastAPI()
 gemini_service = GeminiService()
 db_service = DatabaseService()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_session_id(response: Response, session_id: Optional[str] = Cookie(None)):
     """Dependency to get or create a session_id cookie."""

@@ -39,7 +39,12 @@ copy .env.example .env
 docker build -t ai-study-pilot .
 
 ### Run 
-docker run -d -p 8001:8000 --env-file .env ai-study-pilot
+docker run -d -p 8001:8000 --name ai-study-pilot --env-file .env ai-study-pilot
 
 ### Test
 http://localhost:8001/health
+
+### Stop and remove docker
+
+docker stop ai-study-pilot
+docker rm ai-study-pilot
