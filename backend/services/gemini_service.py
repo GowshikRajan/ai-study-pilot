@@ -105,7 +105,6 @@ class GeminiService:
                 "Significant detail three."
             ]
         }}
-
         Study Content:
         {study_content}
         """
