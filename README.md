@@ -6,7 +6,7 @@
 
 
 ## Description
-AI Study Pilot is a simple web application designed for university students who want to study faster and more efficiently. It allows users to paste lecture notes or textbook content and quickly turn them into useful study materials such as summaries, flashcards, and quizzes. The goal is to help students save time and improve understanding before exams.
+AI Study Pilot is a simple web application designed for university students who want to study faster and more efficiently. It allows users to paste lecture notes or textbook content and quickly turn them into useful study materials such as summaries, flashcards, and quizzes. The goal is to help students save time and improve understanding before exams. Test CI/CD.
 
 
 ## Features
