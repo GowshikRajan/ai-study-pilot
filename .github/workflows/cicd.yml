@@ -90,7 +90,13 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      - name: Trigger Render deploy hook
+      - name: Deploy to Render
         run: |
-          curl --fail "${{ secrets.RENDER_DEPLOY_URL }}"
-          echo "Deploy hook triggered successfully."
+            curl -X PATCH https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }} \
+              -H "Authorization: Bearer ${{ secrets.RENDER_DEPLOY_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "image": {
+                  "url": "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/ai-study-pilot:${{ github.sha }}"
+                }
+              }'
